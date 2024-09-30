@@ -1,0 +1,91 @@
+.courseDetail {
+  padding: 16px 16px 12px;
+  .chapterAttention {
+    padding: 12px 16px;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    position: relative;
+    .downloadBtn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+    p {
+      height: 30px;
+      line-height: 30px;
+      color: rgba(10, 7, 8, 1);
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    .courseNum {
+      width: 113px;
+      height: 38px;
+      line-height: 38px;
+      text-align: center;
+      border-radius: 38px;
+      background: #fbe5e6;
+      margin-bottom: 12px;
+      span {
+        color: rgba(244, 88, 86, 1);
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+  }
+  .chapterContain {
+    border-radius: 16px;
+    overflow: hidden;
+    .courseTitle {
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      div.index {
+        span {
+          width: 40px;
+          height: 40px;
+          margin-right: 12px;
+          color: #ff3f45;
+          background: #ffecec;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      div.content {
+        span.title {
+          font-weight: bold;
+          margin-right: 5px;
+        }
+      }
+    }
+    .courseContent {
+      position: relative;
+      >div {
+        &:not(:last-child) {
+          margin-bottom: 5px;
+        }
+        span:first-child {
+          font-size: 16px;
+        }
+        span:last-child {
+          font-size: 16px;
+          color: #000000;
+        }
+      }
+      >.playAudioBtn {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+      >.collectBtn {
+        position: absolute;
+        top: 0;
+        right: 54px;
+      }
+    }
+  }
+}
+

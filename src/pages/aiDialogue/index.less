@@ -1,0 +1,48 @@
+.aiDialogue {
+  padding: 16px 16px 12px;
+  .chapterAttention {
+    margin-bottom: 12px;
+  }
+  .chapterContain {
+    border-radius: 16px;
+    overflow: hidden;
+    ul.dialogue {
+      min-height: 200px;
+      background: #ffffff;
+      li {
+        display: flex;
+        div.stream {
+          line-height: 18px;
+        }
+        &:not(:last-child) {
+          margin-bottom: 10px;
+        }
+        &.ai {
+          justify-content: start;
+          div {
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            background: #ffffff;
+          }
+        }
+        &.me {
+          justify-content: end;
+          div {
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            background: #8ae95e;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+

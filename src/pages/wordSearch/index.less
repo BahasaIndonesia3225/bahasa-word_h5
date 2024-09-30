@@ -1,0 +1,58 @@
+.wordSearch {
+  padding: 16px 16px 12px;
+  .chapterAttention {
+    margin-bottom: 12px;
+  }
+  .chapterContain {
+    border-radius: 16px;
+    overflow: hidden;
+    .courseTitle {
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      div.index {
+        span {
+          width: 40px;
+          height: 40px;
+          margin-right: 12px;
+          color: #ff3f45;
+          background: #ffecec;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      div.content {
+        span {
+          font-weight: bold;
+          margin-right: 5px;
+        }
+      }
+    }
+    .courseContent {
+      position: relative;
+      >div {
+        &:not(:last-child) {
+          margin-bottom: 5px;
+        }
+        span:first-child {
+          font-size: 16px;
+        }
+        span:last-child {
+          font-size: 16px;
+          color: #000000;
+        }
+      }
+      >.playAudioBtn {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+  }
+}
+
+
+
+
