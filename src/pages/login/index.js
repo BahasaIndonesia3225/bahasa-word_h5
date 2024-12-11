@@ -35,6 +35,26 @@ const Login = (props) => {
     })
   }
 
+  //账号密码锁定
+  const handleInputLock = () => {
+    Modal.show({
+      content: (
+        <>
+          <AutoCenter style={{ fontSize: '24px', color: '#000' }}>密码输入错误5次</AutoCenter>
+          <AutoCenter style={{ fontSize: '14px', color: '#ff0000' }}>帐户锁定10分钟</AutoCenter>
+        </>
+      ),
+      closeOnAction: true,
+      actions: [
+        {
+          key: 'online',
+          text: '再试一次',
+          primary: true,
+        },
+      ],
+    })
+  }
+
   //表单信息
   const [form] = Form.useForm()
   const onFinish = () => {
@@ -65,6 +85,7 @@ const Login = (props) => {
           handleInputSuccess();
         }else {
           if(msg === "用户不存在/密码错误") handleInputError();
+          if(msg === "密码输入错误5次，帐户锁定10分钟") handleInputLock();
         }
       })
   }
