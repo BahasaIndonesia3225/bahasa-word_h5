@@ -6,7 +6,8 @@
     "build": "umi build",
     "postinstall": "umi setup",
     "setup": "umi setup",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "deploy": "umi build && node ./deploy.config.js"
   },
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
@@ -15,6 +16,7 @@
     "antd-mobile-icons": "^0.3.0",
     "bizgoblin": "^0.2.0",
     "dayjs": "^1.11.9",
+    "ssh2-sftp-client": "^11.0.0",
     "umi": "^4.0.79"
   },
   "devDependencies": {
