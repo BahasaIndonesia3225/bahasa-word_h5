@@ -5,7 +5,7 @@ export default defineConfig({
   esbuildMinifyIIFE: true,
   title: "东东单词卡",
   npmClient: 'pnpm',
-  outputPath: 'indonesia.bahasaindo.cn',
+  outputPath: 'portuguesa.cn',
   history: { type: 'hash' },
   hash: true,  //让 build 之后的产物包含 hash 后缀, 避免浏览器加载缓存
   mock: false, //关闭 Mock 功能
@@ -16,7 +16,8 @@ export default defineConfig({
   proxy: {
     //备用环境
     '/prod-api': {
-      'target': 'http://bahasaindo.cn/prod-api/',
+      // 'target': 'http://bahasaindo.cn/prod-api/',
+      'target': 'http://damin.portuguesa.cn/prod-api',
       'changeOrigin': true,
       'pathRewrite': { '^/prod-api' : '' },
     },

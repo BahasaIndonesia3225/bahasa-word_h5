@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import {useNavigate, connect } from 'umi';
-import {Image, List, SearchBar, Skeleton, Empty, FloatingBubble} from 'antd-mobile'
+import {Image, List, SearchBar, Skeleton, Empty, FloatingBubble, Badge} from 'antd-mobile'
 import { request } from '@/services';
 import './index.less'
 
@@ -89,6 +89,7 @@ const courseCatalog = (props) => {
                     <div className="courseItem">
                       <span>{index + 1}</span>
                       <span>{item.name.split('】')[1]}</span>
+                      <Badge content={item.number} />
                     </div>
                   </List.Item>
                 ))}
