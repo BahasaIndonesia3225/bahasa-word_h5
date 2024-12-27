@@ -92,7 +92,7 @@ const courseDetail = (props) => {
         收藏
       </FloatingBubble>
       <div className="chapterAttention">
-        <p>{categoryName.split('】')[1]}</p>
+        <p>{categoryName}</p>
         <div className="courseNum">
           <span>共{wordsData.length}个词汇</span>
         </div>

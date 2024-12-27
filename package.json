@@ -6,7 +6,6 @@
     "build": "umi build",
     "postinstall": "umi setup",
     "setup": "umi setup",
-    "start": "npm run dev",
     "deploy": "umi build && node ./deploy.config.js"
   },
   "dependencies": {
@@ -15,6 +14,7 @@
     "antd-mobile": "^5.32.1",
     "antd-mobile-icons": "^0.3.0",
     "bizgoblin": "^0.2.0",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.9",
     "ssh2-sftp-client": "^11.0.0",
     "umi": "^4.0.79"

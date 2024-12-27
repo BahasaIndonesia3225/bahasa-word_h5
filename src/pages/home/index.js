@@ -12,7 +12,7 @@ export default () => {
     const link = type === "youtube" ? "https://www.youtube.com/channel/UCNz0CuIKBXpizEmn8akC42w" : "https://v.douyin.com/iNNrghAv/ 8@5.com";
     window.open(link, "_blank")
   }
-
+  
   return (
     <div className="home">
       <Mask opacity='thick' visible={visible}>
@@ -25,7 +25,7 @@ export default () => {
       </Mask>
       <Image
         className="logoCard"
-        src='./image/logo_word.png'
+        src='./image/home_logo_portuguesa.png'
       />
       <Image style={{opacity: 0}} src='./image/WechatIMG4809.jpg'/>
       <Image
@@ -38,14 +38,6 @@ export default () => {
         src='./image/loginProtocol.png'
         onClick={() => window.open("http://taioassets.oss-cn-beijing.aliyuncs.com/Pdfs/%E9%9A%90%E7%A7%81%E6%94%BF%E7%AD%96.pdf", "_blank")}
       />
-      {/*<div*/}
-      {/*  className="bahasaindoLink"*/}
-      {/*  onClick={() => window.open("http://www.bahasaindo.net", "_blank")}>*/}
-      {/*  <div className="icon">*/}
-      {/*    <Image src="./image/icon_card.png" alt=""/>*/}
-      {/*  </div>*/}
-      {/*  <span>学习系统</span>*/}
-      {/*</div>*/}
       <div className="bahasaindoFooter">
         <div className="friendLink">
           <span onClick={() => dumpLink('youtube')}>东东印尼语YouTube</span>
