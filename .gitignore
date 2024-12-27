@@ -6,9 +6,9 @@
 /src/.umi-production
 /src/.umi-test
 /dist
-/mobile
-.swc
+/portuguesa.cn
 /indonesia.bahasaindo.cn
+.swc
 
 # Log files
 npm-debug.log*
@@ -24,3 +24,4 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+*.zip

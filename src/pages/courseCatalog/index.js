@@ -40,7 +40,7 @@ const courseCatalog = (props) => {
       </FloatingBubble>
       <div className="chapterAttention">
         <SearchBar
-          placeholder='仅限输入印尼语单词'
+          placeholder='仅限输入葡萄牙语单词'
           showCancelButton
           style={{
             '--border-radius': '16px',

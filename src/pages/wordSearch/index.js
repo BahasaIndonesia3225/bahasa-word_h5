@@ -68,7 +68,7 @@ const courseCatalog = (props) => {
             '--height': '32px',
             '--padding-left': '12px',
           }}
-          placeholder='仅限输入印尼语单词'
+          placeholder='仅限输入葡萄牙语单词'
           showCancelButton
           defaultValue={remark}
           onSearch={val => {
