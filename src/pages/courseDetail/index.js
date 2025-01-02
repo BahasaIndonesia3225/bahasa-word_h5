@@ -41,6 +41,13 @@ const courseDetail = (props) => {
     audio.load()
   }
 
+  const setSentence = (txt) => {
+    let txt1 = txt.replace(/(【例句\d*】)/g, "<br>$1");
+    txt1 = txt1.replace(/(【欧葡例句\d*】)/g, "<br>$1");
+    txt1 = txt1.replace(/(【巴葡例句\d*】)/g, "<br>$1");
+    return txt1.replace(/(【.*?】)/g, '<span class="highlight">$1</span>')
+  }
+
   //收藏功能相关
   const collectAudio = (data) => {
     let data_ = getCollectWord();
@@ -232,7 +239,7 @@ const courseDetail = (props) => {
                         {
                           showSentence && <div>
                             <span>单词解释：</span>
-                            <span>{item.sentence}</span>
+                            <span dangerouslySetInnerHTML={{ __html: setSentence(item.sentence) }}></span>
                           </div>
                         }
                       </div>
