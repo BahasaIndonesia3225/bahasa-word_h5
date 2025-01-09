@@ -1,19 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'umi';
-import { getCollectWord, setCollectWord, clearCollectWord } from "@/utils/collectWord";
-import { Space, Collapse, Switch, Button, Empty, NoticeBar, Modal } from 'antd-mobile'
-import { SoundOutline, StarFill, DownlandOutline } from 'antd-mobile-icons';
-import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import { Space, Collapse, Switch, Button, Empty, Modal, Card } from 'antd-mobile'
+import { SoundOutline, StarFill } from 'antd-mobile-icons';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import MyPdfDocument from './print/MyDocument';
+import { request } from '@/services';
 import "./index.less"
 
 const courseWord = (props) => {
-  const [collectedWord, setCollectedWord] = useState(props.collectWord);
-
   const [showChinese, setShowChinese] = useState(true);
   const [showType, setShowType] = useState(true);
   const [showSentence, setShowSentence] = useState(true)
   const [showWrite, setShowWrite] = useState(true);
+  const [collectedWord, setCollectedWord] = useState([]);
+
+  const getCollectedWord = () => {
+    request.get('/prod-api/collectApi/selectQuestionListByUserId', {
+      params: {
+        pageSize: 1000,
+        pageNum: 1,
+      }
+    }).then(res => {
+      const { rows } = res;
+      setCollectedWord(rows);
+    })
+  }
+  useEffect(() => { getCollectedWord() }, [])
 
   //播放音频相关
   const audio = new Audio();
@@ -36,19 +48,21 @@ const courseWord = (props) => {
     audio.load()
   }
 
+  const setSentence = (txt) => {
+    let txt1 = txt.replace(/(【例句\d*】)/g, "<br>$1");
+    txt1 = txt1.replace(/(【欧葡例句\d*】)/g, "<br>$1");
+    txt1 = txt1.replace(/(【巴葡例句\d*】)/g, "<br>$1");
+    return txt1.replace(/(【.*?】)/g, '<span class="highlight">$1</span>')
+  }
+
   //收藏功能相关
   const collectAudio = (data) => {
-    let data_ = getCollectWord();
-    if(data_.some(item => item.id === data.id)) {
-      data_ = data_.filter(item => item.id !== data.id);
-    }else {
-      data_.push(data);
-    }
-    props.dispatch({
-      type: "user/changeCollectWord",
-      payload: data_
+    const { id } = data;
+    request.post('/prod-api/collectApi/collect', {
+      data: { questionId: id }
+    }).then(res => {
+      getCollectedWord()
     })
-    setCollectedWord(data_);
   }
 
   return (
@@ -126,17 +140,6 @@ const courseWord = (props) => {
           />
         </Space>
       </div>
-      <NoticeBar
-        style={{
-          marginBottom: 12,
-          borderRadius: 16,
-          '--background-color': '#ffffff',
-          '--border-color': '#ffffff'
-        }}
-        content='收藏数据仅保存于本地缓存'
-        closeable
-        wrap
-        color='info' />
       <div className="chapterContain">
         {
           collectedWord.length ? (
@@ -162,42 +165,52 @@ const courseWord = (props) => {
                         </div>
                       </div>
                     }>
-                    <div className='courseContent'>
-                      <Button
-                        className="playAudioBtn"
-                        onClick={(() => playAudio(item))}
-                        color='primary'
-                        size='mini'
-                        fill='outline'>
-                        <SoundOutline fontSize={16} color='#166cfe'/>
-                      </Button>
-                      <Button
-                        className="collectBtn"
-                        onClick={(() => collectAudio(item))}
-                        color='primary'
-                        size='mini'
-                        fill='outline'>
-                        <StarFill fontSize={16} color='#166cfe'/>
-                      </Button>
-                      {
-                        showChinese && <div>
-                          <span>中文释义：</span>
-                          <span>{item.chinese}</span>
-                        </div>
+                    <Card
+                      title={
+                        <Space justify='end' block>
+                          <Button
+                            className="playAudioBtn"
+                            onClick={(() => playAudio(item))}
+                            color='primary'
+                            size='mini'
+                            fill='outline'>
+                            <SoundOutline fontSize={16} color='#166cfe'/>
+                          </Button>
+                          <Button
+                            className="collectBtn"
+                            onClick={(() => collectAudio(item))}
+                            color='primary'
+                            size='mini'
+                            fill='outline'>
+                            {
+                              collectedWord.some(d => d.id === item.id) ?
+                                <StarFill fontSize={16} color='#166cfe'/> :
+                                <StarOutline fontSize={16} color='#166cfe'/>
+                            }
+                          </Button>
+                        </Space>
                       }
-                      {
-                        showType && <div>
-                          <span>音节划分：</span>
-                          <span>{item.type}</span>
-                        </div>
-                      }
-                      {
-                        showSentence && <div>
-                          <span>单词解释：</span>
-                          <span>{item.sentence}</span>
-                        </div>
-                      }
-                    </div>
+                    >
+                      <div className='courseContent'>
+                        {
+                          showChinese && <div>
+                            <span>【中文释义】：</span>
+                            <span>{item.chinese}</span>
+                          </div>
+                        }
+                        {
+                          showType && <div>
+                            <span>【音节划分】：</span>
+                            <span>{item.type}</span>
+                          </div>
+                        }
+                        {
+                          showSentence && <div>
+                            <span dangerouslySetInnerHTML={{__html: setSentence(item.sentence)}}></span>
+                          </div>
+                        }
+                      </div>
+                    </Card>
                   </Collapse.Panel>
                 ))
               }

@@ -1,24 +1,63 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, connect } from 'umi';
-import { getCollectWord, setCollectWord, clearCollectWord } from "@/utils/collectWord";
-import { Space, Collapse, Switch, Button, Skeleton, Empty, NoticeBar, Modal, FloatingBubble } from 'antd-mobile'
-import { SoundOutline, StarOutline, StarFill } from 'antd-mobile-icons';
+import { Space, Collapse, Switch, Button, Skeleton, Empty, NoticeBar, Modal, FloatingBubble, Card } from 'antd-mobile'
+import { SoundOutline, StarOutline, StarFill, AntOutline } from 'antd-mobile-icons';
 import { request } from '@/services';
 import "./index.less"
 
-const courseDetail = (props) => {
+const courseDetail = () => {
   const stateParams = useLocation();
   const navigate = useNavigate();
   const { categoryId, categoryName } = stateParams.state;
-
-  const [loading, setLoading] = useState(false)
-  const [wordsData, setWordsData] = useState([]);
 
   const [showChinese, setShowChinese] = useState(true);
   const [showType, setShowType] = useState(true);
   const [showSentence, setShowSentence] = useState(true)
   const [showWrite, setShowWrite] = useState(true);
-  const [collectedWord, setCollectedWord] = useState(props.collectWord);
+
+  //获取单词列表相关
+  const [loading, setLoading] = useState(false)
+  const [wordsData, setWordsData] = useState([]);
+  const queryWords = () => {
+    setLoading(true)
+    request.get('/prod-api//WordApiController/list', {
+      params: {
+        pageSize: 1000,
+        pageNum: 1,
+        categoryId
+      }
+    }).then(res => {
+      const { code, rows, total } = res;
+      setLoading(false)
+      setWordsData(rows)
+    })
+  }
+  useEffect(() => { queryWords() }, [])
+
+  //获取收藏单词列表相关
+  const [collectedWord, setCollectedWord] = useState([]);
+  const getCollectedWord = () => {
+    request.get('/prod-api/collectApi/selectQuestionListByUserId', {
+      params: {
+        pageSize: 1000,
+        pageNum: 1,
+      }
+    }).then(res => {
+      const { rows } = res;
+      setCollectedWord(rows);
+    })
+  }
+  useEffect(() => { getCollectedWord() }, [])
+
+  //收藏功能相关
+  const collectAudio = (data) => {
+    const { id } = data;
+    request.post('/prod-api/collectApi/collect', {
+      data: { questionId: id }
+    }).then(res => {
+      getCollectedWord()
+    })
+  }
 
   //播放音频相关
   const audio = new Audio();
@@ -48,43 +87,10 @@ const courseDetail = (props) => {
     return txt1.replace(/(【.*?】)/g, '<span class="highlight">$1</span>')
   }
 
-  //收藏功能相关
-  const collectAudio = (data) => {
-    let data_ = getCollectWord();
-    if(data_.some(item => item.id === data.id)) {
-      data_ = data_.filter(item => item.id !== data.id);
-    }else {
-      data_.push(data);
-    }
-    props.dispatch({
-      type: "user/changeCollectWord",
-      payload: data_
-    })
-    setCollectedWord(data_);
-  }
-
   //跳转到收藏界面
   const onGoCollectPage = () => {
     navigate("/collectWord", { replace: false })
   }
-
-  const queryWords = () => {
-    setLoading(true)
-    request.get('/prod-api//WordApiController/list', {
-      params: {
-        pageSize: 1000,
-        pageNum: 1,
-        categoryId
-      }
-    }).then(res => {
-      const { code, rows, total } = res;
-      setLoading(false)
-      setWordsData(rows)
-    })
-  }
-  useEffect(() => {
-    queryWords()
-  }, [])
 
   return (
     <div className='courseDetail'>
@@ -203,46 +209,52 @@ const courseDetail = (props) => {
                           </div>
                         </div>
                       }>
-                      <div className='courseContent'>
-                        <Button
-                          className="playAudioBtn"
-                          onClick={(() => playAudio(item))}
-                          color='primary'
-                          size='mini'
-                          fill='outline'>
-                          <SoundOutline fontSize={16} color='#166cfe'/>
-                        </Button>
-                        <Button
-                          className="collectBtn"
-                          onClick={(() => collectAudio(item))}
-                          color='primary'
-                          size='mini'
-                          fill='outline'>
+                      <Card
+                        title={
+                          <Space justify='end' block>
+                            <Button
+                              className="playAudioBtn"
+                              onClick={(() => playAudio(item))}
+                              color='primary'
+                              size='mini'
+                              fill='outline'>
+                              <SoundOutline fontSize={16} color='#166cfe'/>
+                            </Button>
+                            <Button
+                              className="collectBtn"
+                              onClick={(() => collectAudio(item))}
+                              color='primary'
+                              size='mini'
+                              fill='outline'>
+                              {
+                                collectedWord.some(d => d.id === item.id) ?
+                                  <StarFill fontSize={16} color='#166cfe'/> :
+                                  <StarOutline fontSize={16} color='#166cfe'/>
+                              }
+                            </Button>
+                          </Space>
+                        }
+                      >
+                        <div className='courseContent'>
                           {
-                            collectedWord.some(d => d.id === item.id) ?
-                              <StarFill fontSize={16} color='#166cfe'/> :
-                              <StarOutline fontSize={16} color='#166cfe' />
+                            showChinese && <div>
+                              <span>【中文释义】：</span>
+                              <span>{item.chinese}</span>
+                            </div>
                           }
-                        </Button>
-                        {
-                          showChinese && <div>
-                            <span>中文释义：</span>
-                            <span>{item.chinese}</span>
-                          </div>
-                        }
-                        {
-                          showType && <div>
-                            <span>音节划分：</span>
-                            <span>{item.type}</span>
-                          </div>
-                        }
-                        {
-                          showSentence && <div>
-                            <span>单词解释：</span>
-                            <span dangerouslySetInnerHTML={{ __html: setSentence(item.sentence) }}></span>
-                          </div>
-                        }
-                      </div>
+                          {
+                            showType && <div>
+                              <span>【音节划分】：</span>
+                              <span>{item.type}</span>
+                            </div>
+                          }
+                          {
+                            showSentence && <div>
+                              <span dangerouslySetInnerHTML={{__html: setSentence(item.sentence)}}></span>
+                            </div>
+                          }
+                        </div>
+                      </Card>
                     </Collapse.Panel>
                   ))
                 }
