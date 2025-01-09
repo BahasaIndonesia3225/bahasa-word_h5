@@ -61,6 +61,7 @@ const courseDetail = () => {
 
   //播放音频相关
   const audio = new Audio();
+  let itemID = null;
   const once = function () {
     audio.removeEventListener('error', once);
     Modal.alert({
@@ -69,9 +70,11 @@ const courseDetail = () => {
         console.log('Confirmed')
       },
     })
+    request.post('/prod-api/system/err', { data: { wordId: itemID } });
   }
   const playAudio = (data) => {
-    const { soundRecording } = data;
+    const { soundRecording, id } = data;
+    itemID = id;
     audio.src = soundRecording;
     audio.addEventListener('canplaythrough', () => {
       audio.play();
