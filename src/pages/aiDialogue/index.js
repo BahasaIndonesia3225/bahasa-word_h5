@@ -1,128 +1,61 @@
-import React, { useState, useEffect } from 'react'
-import {SearchBar} from 'antd-mobile'
-import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { useXAgent, useXChat, Sender, Bubble, XRequest } from '@ant-design/x';
+import React from 'react';
 import "./index.less"
 
+const { create } = XRequest({
+  baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+  dangerouslyApiKey: 'sk-ab3033f199eb4bcd93ea82f4c76cd117',
+  model: 'qwen-plus',
+});
+
 const aiDialogue = () => {
-  const [remark, setRemark] = useState("");
-  const [dialogue, setDialogue] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [streamWords, setStreamWords] = useState("");
+  const [agent] = useXAgent({
+    request: async (info, callbacks) => {
+      const { messages, message } = info;
+      const { onUpdate } = callbacks;
+      let content = '';
 
-  const url = process.env.NODE_ENV === 'development' ?
-    '/compatible-mode/v1/chat/completions' :
-    'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
-  const queryAiAnswer = () => {
-    let index = 0;
-    let wordsArray = [];
-    const controller = new AbortController()
-    const signal = controller.signal
-    fetchEventSource(url, {
-      method: 'POST',
-      signal: signal,
-      headers: {
-        "Authorization": 'Bearer' + 'sk-ab3033f199eb4bcd93ea82f4c76cd117',
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "model": "qwen-plus",
-        "messages": [
+      try {
+        create(
           {
-            "role": "system",
-            "content": "You are a helpful assistant."
+            messages: [{ role: 'user', content: message }],
+            stream: true,
           },
           {
-            "role": "user",
-            "content": remark
+            onSuccess: (chunks) => {
+              console.log('sse chunk list', chunks);
+            },
+            onError: (error) => {
+              console.log('error', error);
+            },
+            onUpdate: (chunk) => {
+              const { data } = chunk;
+              if(data.indexOf('[DONE]') === -1) {
+                const message = JSON.parse(data);
+                content += message?.choices[0].delta.content;
+                onUpdate(content);
+              }
+            },
           },
-        ],
-        "stream": true,
-        "parameters": {}
-      }),
-      onopen(e) {
-        if(e.ok) {
-          setLoading(true);
-          console.log("链接建立")
-        }
-      },
-      onmessage(ev) {
-        const { data } = ev;
-        if(data !== "[DONE]") {
-          const message = JSON.parse(data);
-          const content = message.choices[0].delta.content.replaceAll("\n", "<br/>");
-          //模仿chatGPT输出效果
-          index += 100;
-          setTimeout(() => {
-            setStreamWords(v => v + content);
-          }, index);
-          wordsArray.push(content);
-        }
-      },
-      onerror() {
-        setLoading(false);
-        controller.abort();
-        console.log("链接错误")
-      },
-      onclose() {
-        setLoading(false);
-        controller.abort();
-        console.log("链接关闭")
-        //保存会话
+        );
+      } catch (error) {}
+    },
+  });
 
-        console.log(wordsArray)
-
-        // setDialogue([
-        //   ...dialogue,
-        //   { type: 'me', txt: remark },
-        //   { type: 'ai', txt: words }
-        // ])
-
-
-      }
-    })
-  }
-
-  useEffect(() => {
-    if(remark) queryAiAnswer()
-  }, [remark])
+  const { onRequest, messages } = useXChat({ agent });
+  const items = messages.map(({ message, id }) => ({
+    key: id,
+    content: message,
+  }));
 
   return (
     <div className='aiDialogue'>
-      <div className="chapterAttention">
-        <SearchBar
-          placeholder='仅限输入葡萄牙语单词'
-          showCancelButton
-          style={{
-            '--border-radius': '16px',
-            '--background': '#ffffff',
-            '--height': '32px',
-            '--padding-left': '12px',
-          }}
-          onSearch={val => {
-            setRemark(val)
-          }}
-        />
+      <div className="dialogueBox">
+        <Bubble.List items={items} />
       </div>
-      <div className="chapterContain">
-        <ul className="dialogue">
-          <li className='ai'>
-            <div className='stream' dangerouslySetInnerHTML={{__html: streamWords}}></div>
-          </li>
-          {
-            dialogue.map((item, index) => {
-              return (
-                <li key={index} className={item.type}>
-                  <div>
-                    {item.txt}
-                  </div>
-                </li>
-              )
-            })
-          }
-        </ul>
-      </div>
+      <Sender onSubmit={onRequest} />
     </div>
-  )
-}
+  );
+};
 
-export default aiDialogue
+export default aiDialogue;
