@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { fetchEventSource } from '@microsoft/fetch-event-source';
 import {SearchBar} from 'antd-mobile'
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 import "./index.less"
 
 const aiDialogue = () => {

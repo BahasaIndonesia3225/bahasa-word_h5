@@ -9,6 +9,7 @@
     "deploy": "umi build && node ./deploy.config.js"
   },
   "dependencies": {
+    "@ant-design/x": "^1.0.5",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@react-pdf/renderer": "^3.4.4",
     "antd-mobile": "^5.32.1",

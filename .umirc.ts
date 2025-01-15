@@ -36,7 +36,7 @@ export default defineConfig({
     { path: "/courseDetail", component: "courseDetail", name: "单词列表" },
     { path: "/collectWord", component: "collectWord", name: "收藏" },
     { path: "/wordSearch", component: "wordSearch", name: "单词搜索" },
-    { path: "/aiDialogue", component: "aiDialogue", name: "AI查词" },
+    { path: "/aiDialogue", component: "aiDialogue", name: "小曼同学" },
     { path: "/dataAnalysis", component: "dataAnalysis", name: "数据面板" },
     { path: "/setting", component: "setting", name: "设置" },
   ],
