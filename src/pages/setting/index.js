@@ -11,12 +11,12 @@ export default () => {
     <div className="setting">
       <List header='偏好设置'>
         <List.Item
-          description='通过AI查询词汇'
+          description='您学习的好帮手~'
           onClick={() => {
             navigate("/aiDialogue", { replace: true })
           }}
         >
-          AI查词
+          小曼同学
         </List.Item>
         <List.Item
           description='行为分析'
