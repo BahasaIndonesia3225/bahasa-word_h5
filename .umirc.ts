@@ -16,8 +16,7 @@ export default defineConfig({
   proxy: {
     //备用环境
     '/prod-api': {
-      // 'target': 'http://bahasaindo.cn/prod-api/',
-      'target': 'http://damin.portuguesa.cn/prod-api',
+      'target': 'http://bahasaindo.cn/prod-api/',
       'changeOrigin': true,
       'pathRewrite': { '^/prod-api' : '' },
     },
