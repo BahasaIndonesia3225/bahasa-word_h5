@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, connect } from 'umi';
-import { Space, Collapse, Switch, Button, Skeleton, Empty, NoticeBar, Modal, FloatingBubble, Card } from 'antd-mobile'
+import { Space, Collapse, Switch, Button, Skeleton, Empty, NoticeBar, Modal, FloatingBubble, Card, Image } from 'antd-mobile'
 import { SoundOutline, StarOutline, StarFill, AntOutline } from 'antd-mobile-icons';
 import { request } from '@/services';
 import "./index.less"
@@ -102,10 +102,15 @@ const courseDetail = () => {
           '--initial-position-bottom': '24px',
           '--initial-position-right': '24px',
           '--edge-distance': '24px',
+          '--background': '#cccccc'
         }}
         onClick={onGoCollectPage}
       >
-        收藏
+        <Image
+          width={28}
+          height={28}
+          src='./image/collectImg.jpg'
+        />
       </FloatingBubble>
       <div className="chapterAttention">
         <p>{categoryName}</p>

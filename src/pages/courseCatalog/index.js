@@ -33,10 +33,15 @@ const courseCatalog = (props) => {
           '--initial-position-bottom': '24px',
           '--initial-position-right': '24px',
           '--edge-distance': '24px',
+          '--background': '#cccccc'
         }}
         onClick={onGoCollectPage}
       >
-        收藏
+        <Image
+          width={28}
+          height={28}
+          src='./image/collectImg.jpg'
+        />
       </FloatingBubble>
       <div className="chapterAttention">
         <SearchBar

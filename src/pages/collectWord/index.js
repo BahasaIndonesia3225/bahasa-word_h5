@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'umi';
-import { Space, Collapse, Switch, Button, Empty, Modal, Card } from 'antd-mobile'
+import { Space, Collapse, Switch, Button, Empty, Modal, Card, NoticeBar } from 'antd-mobile'
 import { SoundOutline, StarFill } from 'antd-mobile-icons';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import MyPdfDocument from './print/MyDocument';
@@ -70,6 +70,18 @@ const courseWord = (props) => {
 
   return (
     <div className='courseDetail'>
+      <NoticeBar
+        style={{
+          marginBottom: 12,
+          borderRadius: 16,
+          '--background-color': '#ffffff',
+          '--border-color': '#ffffff'
+        }}
+        closeable={false}
+        content="欢迎使用我的东东单词本功能，同学们可以将东东单词卡的单词整理纳入东东单词本中，打造属于自己独一无二的印尼语单词本。目前东东单词本已经开启云同步功能，同学们可以在不同设备登陆查看自己整理的单词。手动录入单词功能正在开发中，预计本月可用～"
+        color='info'
+        wrap
+      />
       <div className="chapterAttention">
         <PDFDownloadLink document={<MyPdfDocument data={collectedWord} />} fileName="我的收藏.pdf">
           {
@@ -79,12 +91,12 @@ const courseWord = (props) => {
                 color='primary'
                 size='mini'
                 fill='outline'>
-                { loading ? '导出准备中…' : '导出PDF' }
+                { loading ? '导出准备中…' : '导出单词本(仅限电脑)' }
               </Button>
             }
           }
         </PDFDownloadLink>
-        <p>我的收藏</p>
+        <p>我的东东单词本</p>
         <div className="courseNum">
           <span>共{collectedWord.length}个词汇</span>
         </div>
